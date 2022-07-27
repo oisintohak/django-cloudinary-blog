@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic, View
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponseRedirect
 from .models import Post
 from .forms import CommentForm
@@ -33,7 +34,7 @@ class PostDetail(View):
                 "comment_form": CommentForm()
             },
         )
-    
+
     def post(self, request, slug, *args, **kwargs):
 
         queryset = Post.objects.filter(status=1)
@@ -67,7 +68,7 @@ class PostDetail(View):
 
 
 class PostLike(View):
-    
+
     def post(self, request, slug, *args, **kwargs):
         post = get_object_or_404(Post, slug=slug)
         if post.likes.filter(id=request.user.id).exists():
@@ -76,3 +77,36 @@ class PostLike(View):
             post.likes.add(request.user)
 
         return HttpResponseRedirect(reverse('post_detail', args=[slug]))
+
+
+class PostCreate(CreateView):
+
+    model = Post
+    fields = [
+        'title', 'author', 'slug', 'featured_image', 'image', 'content',
+    ]
+    success_url = '/'
+
+    def form_valid(self, form):
+        print(self.request.FILES)
+        form.instance.image = self.request.FILES.image
+        print('valid')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print('invalid')
+        return super().form_invalid(form)
+
+
+# class PostUpdate(UpdateView):
+
+#     model = Post
+#     success_url = '/'
+#     fields = [
+#         'title', 'author', 'slug', 'featured_image', 'image', 'content',
+#     ]
+
+
+# class PostDelete(DeleteView):
+
+#     model = Post

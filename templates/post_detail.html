@@ -17,6 +17,11 @@
                 {% else %}
                 <img src=" {{ post.featured_image.url }}" width="100%">
                 {% endif %}
+                {% if "placeholder" in post.image.url %}
+                <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%">
+                {% else %}
+                <img src=" {{ post.image.url }}" width="100%">
+                {% endif %}
             </div>
         </div>
     </div>
