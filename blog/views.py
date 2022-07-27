@@ -88,8 +88,10 @@ class PostCreate(CreateView):
     success_url = '/'
 
     def form_valid(self, form):
-        print(self.request.FILES)
-        form.instance.image = self.request.FILES.image
+        # print(self.request)
+        # print(self.request.POST)
+        # print(self.request.FILES)
+        # form.instance.image = self.request.FILES.image
         print('valid')
         return super().form_valid(form)
 
