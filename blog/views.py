@@ -1,9 +1,9 @@
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import generic, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponseRedirect
 from .models import Post
-from .forms import CommentForm
+from .forms import CommentForm, PostForm
 
 
 class PostList(generic.ListView):
@@ -99,6 +99,27 @@ class PostCreate(CreateView):
         print('invalid')
         return super().form_invalid(form)
 
+
+def add_post(request):
+    """ Add a product to the store """
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        else:
+            print('invalid')
+
+        return redirect(reverse('home'))
+    else:
+        form = PostForm()
+
+    template = 'blog/add_post.html'
+    context = {
+        'form': form,
+    }
+
+    return render(request, template, context)
 
 # class PostUpdate(UpdateView):
 
